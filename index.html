@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Present Perfect Tense Test</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4a00e0 0%, #8e2de2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            padding: 30px;
+        }
+
+        .info-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-left: 5px solid #4a00e0;
+        }
+
+        .timer-container {
+            background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 30px;
+            position: sticky;
+            top: 20px;
+            z-index: 100;
+            box-shadow: 0 5px 15px rgba(255,65,108,0.3);
+        }
+
+        .timer {
+            font-family: 'Courier New', monospace;
+            font-size: 2rem;
+            letter-spacing: 2px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #444;
+            font-size: 1.1rem;
+        }
+
+        .form-group input[type="text"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #4a00e0;
+            box-shadow: 0 0 0 3px rgba(74,0,224,0.1);
+        }
+
+        .question-card {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 20px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .question-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .question-number {
+            background: #4a00e0;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+
+        .question-text {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 12px;
+        }
+
+        .option {
+            position: relative;
+        }
+
+        .option input[type="radio"] {
+            display: none;
+        }
+
+        .option label {
+            display: block;
+            padding: 15px;
+            background: #f8f9fa;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .option label:hover {
+            background: #e9ecef;
+            border-color: #4a00e0;
+        }
+
+        .option input[type="radio"]:checked + label {
+            background: linear-gradient(135deg, #4a00e0 0%, #8e2de2 100%);
+            color: white;
+            border-color: #4a00e0;
+            transform: scale(1.02);
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, #00b09b 0%, #96c93d 100%);
+            color: white;
+            border: none;
+            padding: 18px 40px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: block;
+            margin: 40px auto 20px;
+            width: 250px;
+            text-align: center;
+            letter-spacing: 1px;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0,176,155,0.4);
+        }
+
+        .btn-submit:active {
+            transform: translateY(-1px);
+        }
+
+        .btn-submit:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .spinner {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #4a00e0;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-size: 0.9rem;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                border-radius: 10px;
+            }
+            
+            .header {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .main-content {
+                padding: 20px;
+            }
+            
+            .timer-container {
+                font-size: 1.2rem;
+                padding: 12px;
+            }
+            
+            .timer {
+                font-size: 1.5rem;
+            }
+            
+            .options {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .question-card {
+                padding: 15px;
+            }
+            
+            .btn-submit {
+                width: 100%;
+                padding: 15px;
+            }
+        }
+
+        .test-container {
+            display: none;
+        }
+
+        #loginForm {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            display: none;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .confirmation {
+            text-align: center;
+            padding: 20px;
+            background: #f0f8ff;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📝 Present Perfect Tense Test</h1>
+            <p>Test your knowledge of the present perfect tense</p>
+        </div>
+
+        <div class="main-content">
+            <!-- Login Section -->
+            <div id="loginSection">
+                <div class="info-section">
+                    <h2>Welcome to the Test</h2>
+                    <p>Please enter your name to start the test. You will have <strong>30 minutes</strong> to complete all 15 questions.</p>
+                    <p><strong>Instructions:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>Read each question carefully</li>
+                        <li>Choose the best answer</li>
+                        <li>You cannot go back after submitting</li>
+                        <li>The timer starts when you begin the test</li>
+                        <li>Results will be sent to your teacher</li>
+                    </ul>
+                </div>
+
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="name">Your Full Name *</label>
+                        <input type="text" id="name" name="name" required placeholder="Enter your full name">
+                    </div>
+
+                    <div class="confirmation">
+                        <p>✅ <strong>Note to Students:</strong></p>
+                        <p>Your test results will be automatically sent to your teacher via Telegram.</p>
+                        <p>You don't need to provide any contact information.</p>
+                    </div>
+
+                    <button type="submit" class="btn-submit">Start Test</button>
+                </form>
+            </div>
+
+            <!-- Test Section -->
+            <div id="testSection" class="test-container">
+                <div class="timer-container">
+                    <div>Time Remaining: <span id="timer" class="timer">30:00</span></div>
+                </div>
+
+                <div class="info-section">
+                    <h2>Student: <span id="candidateName"></span></h2>
+                    <p>Complete all 15 multiple choice questions. Select the best answer for each question.</p>
+                </div>
+
+                <form id="testForm">
+                    <!-- Questions will be inserted here by JavaScript -->
+                </form>
+
+                <div class="loading" id="loading">
+                    <div class="spinner"></div>
+                    <p>Submitting your test...</p>
+                    <p>Your results are being sent to your teacher.</p>
+                </div>
+
+                <div id="successAlert" class="alert alert-success">
+                    <h3>✅ Test Submitted Successfully!</h3>
+                    <p>Your answers have been submitted and sent to your teacher.</p>
+                    <p>You can close this window now.</p>
+                </div>
+
+                <div id="errorAlert" class="alert alert-error">
+                    <h3>❌ Error</h3>
+                    <p id="errorMessage">An error occurred. Please try again.</p>
+                </div>
+
+                <button type="button" id="submitTest" class="btn-submit">Submit Test</button>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>© 2024 Present Perfect Test | Time Limit: 30 minutes</p>
+            <p style="font-size: 0.8rem; color: #888; margin-top: 5px;">Results are automatically sent to teacher</p>
+        </div>
+    </div>
+
+    <script>
+        // Test data
+        const testData = [
+            {
+                id: 1,
+                question: "I ________ my homework yet.",
+                options: [
+                    { id: "q1a", value: "A", text: "haven't finished" },
+                    { id: "q1b", value: "B", text: "didn't finish" },
+                    { id: "q1c", value: "C", text: "don't finish" },
+                    { id: "q1d", value: "D", text: "wasn't finishing" }
+                ],
+                correct: "A",
+                explanation: "Use present perfect with 'yet' for unfinished actions"
+            },
+            {
+                id: 2,
+                question: "She ________ in London since 2020.",
+                options: [
+                    { id: "q2a", value: "A", text: "lived" },
+                    { id: "q2b", value: "B", text: "has lived" },
+                    { id: "q2c", value: "C", text: "lives" },
+                    { id: "q2d", value: "D", text: "is living" }
+                ],
+                correct: "B",
+                explanation: "Use present perfect with 'since' for actions starting in past and continuing"
+            },
+            {
+                id: 3,
+                question: "________ you ever ________ sushi?",
+                options: [
+                    { id: "q3a", value: "A", text: "Have / eaten" },
+                    { id: "q3b", value: "B", text: "Did / eat" },
+                    { id: "q3c", value: "C", text: "Do / eat" },
+                    { id: "q3d", value: "D", text: "Had / eaten" }
+                ],
+                correct: "A",
+                explanation: "Use present perfect with 'ever' for life experiences"
+            },
+            {
+                id: 4,
+                question: "They ________ just ________ the news.",
+                options: [
+                    { id: "q4a", value: "A", text: "have / heard" },
+                    { id: "q4b", value: "B", text: "did / hear" },
+                    { id: "q4c", value: "C", text: "will / hear" },
+                    { id: "q4d", value: "D", text: "are / hearing" }
+                ],
+                correct: "A",
+                explanation: "Use present perfect with 'just' for recent actions"
+            },
+            {
+                id: 5,
+                question: "We ________ that movie three times.",
+                options: [
+                    { id: "q5a", value: "A", text: "see" },
+                    { id: "q5b", value: "B", text: "saw" },
+                    { id: "q5c", value: "C", text: "have seen" },
+                    { id: "q5d", value: "D", text: "were seeing" }
+                ],
+                correct: "C",
+                explanation: "Use present perfect for actions that happened multiple times"
+            },
+            {
+                id: 6,
+                question: "He ________ his keys. He can't find them.",
+                options: [
+                    { id: "q6a", value: "A", text: "lost" },
+                    { id: "q6b", value: "B", text: "has lost" },
+                    { id: "q6c", value: "C", text: "loses" },
+                    { id: "q6d", value: "D", text: "was losing" }
+                ],
+                correct: "B",
+                explanation: "Use present perfect for actions with present results"
+            },
+            {
+                id: 7,
+                question: "How long ________ she ________ her boyfriend?",
+                options: [
+                    { id: "q7a", value: "A", text: "has / known" },
+                    { id: "q7b", value: "B", text: "did / know" },
+                    { id: "q7c", value: "C", text: "does / know" },
+                    { id: "q7d", value: "D", text: "is / knowing" }
+                ],
+                correct: "A",
+                explanation: "Use present perfect with 'How long' for duration up to now"
+            },
+            {
+                id: 8,
+                question: "I ________ my grandmother for two months.",
+                options: [
+                    { id: "q8a", value: "A", text: "didn't visit" },
+                    { id: "q8b", value: "B", text: "haven't visited" },
+                    { id: "q8c", value: "C", text: "don't visit" },
+                    { id: "q8d", value: "D", text: "am not visiting" }
+                ],
+                correct: "B",
+                explanation: "Use present perfect with 'for' for duration up to now"
+            },
+            {
+                id: 9,
+                question: "It's the best book I ________ .",
+                options: [
+                    { id: "q9a", value: "A", text: "ever read" },
+                    { id: "q9b", value: "B", text: "have ever read" },
+                    { id: "q9c", value: "C", text: "never read" },
+                    { id: "q9d", value: "D", text: "read" }
+                ],
+                correct: "B",
+                explanation: "Use present perfect with superlatives + 'ever'"
+            },
+            {
+                id: 10,
+                question: "The train ________ yet. We have to wait.",
+                options: [
+                    { id: "q10a", value: "A", text: "didn't arrive" },
+                    { id: "q10b", value: "B", text: "hasn't arrived" },
+                    { id: "q10c", value: "C", text: "doesn't arrive" },
+                    { id: "q10d", value: "D", text: "isn't arriving" }
+                ],
+                correct: "B",
+                explanation: "Use present perfect negative with 'yet'"
+            },
+            {
+                id: 11,
+                question: "Sarah isn't here. She ________ to the store.",
+                options: [
+                    { id: "q11a", value: "A", text: "went" },
+                    { id: "q11b", value: "B", text: "goes" },
+                    { id: "q11c", value: "C", text: "has gone" },
+                    { id: "q11d", value: "D", text: "had gone" }
+                ],
+                correct: "C",
+                explanation: "Use present perfect for recent actions affecting present"
+            },
+            {
+                id: 12,
+                question: "________ Tom ________ his report?",
+                options: [
+                    { id: "q12a", value: "A", text: "Did / finish" },
+                    { id: "q12b", value: "B", text: "Has / finished" },
+                    { id: "q12c", value: "C", text: "Is / finishing" },
+                    { id: "q12d", value: "D", text: "Does / finish" }
+                ],
+                correct: "B",
+                explanation: "Use present perfect for recently completed actions"
+            },
+            {
+                id: 13,
+                question: "I'm tired because I ________ well recently.",
+                options: [
+                    { id: "q13a", value: "A", text: "didn't sleep" },
+                    { id: "q13b", value: "B", text: "haven't slept" },
+                    { id: "q13c", value: "C", text: "don't sleep" },
+                    { id: "q13d", value: "D", text: "am not sleeping" }
+                ],
+                correct: "B",
+                explanation: "Use present perfect with 'recently'"
+            },
+            {
+                id: 14,
+                question: "This is the first time I ________ a smartphone.",
+                options: [
+                    { id: "q14a", value: "A", text: "own" },
+                    { id: "q14b", value: "B", text: "owned" },
+                    { id: "q14c", value: "C", text: "have owned" },
+                    { id: "q14d", value: "D", text: "am owning" }
+                ],
+                correct: "C",
+                explanation: "Use present perfect with 'This is the first time'"
+            },
+            {
+                id: 15,
+                question: "The children ________ their room. It's clean now.",
+                options: [
+                    { id: "q15a", value: "A", text: "cleaned" },
+                    { id: "q15b", value: "B", text: "have cleaned" },
+                    { id: "q15c", value: "C", text: "clean" },
+                    { id: "q15d", value: "D", text: "were cleaning" }
+                ],
+                correct: "B",
+                explanation: "Use present perfect for actions with visible results"
+            }
+        ];
+
+        let timeLeft = 30 * 60; // 30 minutes in seconds
+        let timerInterval;
+        let userInfo = {};
+
+        // DOM Elements
+        const loginSection = document.getElementById('loginSection');
+        const testSection = document.getElementById('testSection');
+        const loginForm = document.getElementById('loginForm');
+        const testForm = document.getElementById('testForm');
+        const candidateNameSpan = document.getElementById('candidateName');
+        const timerElement = document.getElementById('timer');
+        const submitBtn = document.getElementById('submitTest');
+        const loadingElement = document.getElementById('loading');
+        const successAlert = document.getElementById('successAlert');
+        const errorAlert = document.getElementById('errorAlert');
+        const errorMessage = document.getElementById('errorMessage');
+
+        // Initialize test questions
+        function initializeTest() {
+            testForm.innerHTML = '';
+            
+            testData.forEach((question, index) => {
+                const questionCard = document.createElement('div');
+                questionCard.className = 'question-card';
+                
+                questionCard.innerHTML = `
+                    <div class="question-number">${index + 1}</div>
+                    <div class="question-text">${question.question}</div>
+                    <div class="options">
+                        ${question.options.map(option => `
+                            <div class="option">
+                                <input type="radio" 
+                                       id="${option.id}" 
+                                       name="q${question.id}" 
+                                       value="${option.value}"
+                                       required>
+                                <label for="${option.id}">
+                                    <strong>${option.value}</strong>. ${option.text}
+                                </label>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                
+                testForm.appendChild(questionCard);
+            });
+        }
+
+        // Start timer
+        function startTimer() {
+            updateTimerDisplay();
+            
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                updateTimerDisplay();
+                
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    submitTest();
+                }
+            }, 1000);
+        }
+
+        // Update timer display
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            
+            // Change color when less than 5 minutes
+            if (timeLeft < 5 * 60) {
+                timerElement.style.color = '#ff416c';
+            }
+            
+            // Blink when less than 1 minute
+            if (timeLeft < 60) {
+                timerElement.style.animation = timeLeft % 2 === 0 ? 'none' : 'blink 1s infinite';
+            }
+        }
+
+        // Add blinking animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes blink {
+                0%, 100% { opacity: 1; }
+                50% { opacity: 0.5; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Login form submission
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const nameInput = document.getElementById('name');
+            if (!nameInput.value.trim()) {
+                alert('Please enter your name');
+                return;
+            }
+            
+            userInfo = {
+                name: nameInput.value.trim(),
+                startTime: new Date().toISOString(),
+                ipAddress: 'Unknown' // Will be captured server-side
+            };
+            
+            // Show test section
+            loginSection.style.display = 'none';
+            testSection.style.display = 'block';
+            candidateNameSpan.textContent = userInfo.name;
+            
+            // Initialize and start test
+            initializeTest();
+            startTimer();
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // Submit test
+        async function submitTest() {
+            clearInterval(timerInterval);
+            
+            // Get all answers
+            const answers = {};
+            let allAnswered = true;
+            
+            testData.forEach(question => {
+                const selected = document.querySelector(`input[name="q${question.id}"]:checked`);
+                if (selected) {
+                    answers[`q${question.id}`] = selected.value;
+                } else {
+                    allAnswered = false;
+                }
+            });
+            
+            if (!allAnswered) {
+                if (!confirm("You haven't answered all questions. Submit anyway?")) {
+                    startTimer(); // Restart timer if they cancel
+                    return;
+                }
+            }
+            
+            // Calculate score
+            let score = 0;
+            let detailedResults = [];
+            
+            testData.forEach(question => {
+                const userAnswer = answers[`q${question.id}`];
+                const isCorrect = userAnswer === question.correct;
+                
+                if (isCorrect) score++;
+                
+                detailedResults.push({
+                    questionNumber: question.id,
+                    question: question.question,
+                    userAnswer: userAnswer || 'Not answered',
+                    correctAnswer: question.correct,
+                    isCorrect: isCorrect,
+                    explanation: question.explanation
+                });
+            });
+            
+            const percentage = Math.round((score / testData.length) * 100);
+            
+            // Prepare submission data
+            const submissionData = {
+                ...userInfo,
+                endTime: new Date().toISOString(),
+                timeSpent: (30 * 60) - timeLeft,
+                score: score,
+                total: testData.length,
+                percentage: percentage,
+                answers: answers,
+                detailedResults: detailedResults,
+                timestamp: new Date().toLocaleString('en-US', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                    timeZoneName: 'short'
+                })
+            };
+            
+            // Show loading
+            submitBtn.disabled = true;
+            loadingElement.style.display = 'block';
+            
+            try {
+                // Send to API
+                const response = await fetch('/api/submit-test', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(submissionData)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    loadingElement.style.display = 'none';
+                    successAlert.style.display = 'block';
+                    submitBtn.style.display = 'none';
+                    
+                    // Scroll to top
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                } else {
+                    throw new Error(result.error || 'Submission failed');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                loadingElement.style.display = 'none';
+                errorAlert.style.display = 'block';
+                errorMessage.textContent = `Error: ${error.message}. Please try again or contact your teacher.`;
+                submitBtn.disabled = false;
+            }
+        }
+
+        // Attach submit function to button
+        submitBtn.addEventListener('click', submitTest);
+
+        // Auto-submit when tab is closed or refreshed
+        window.addEventListener('beforeunload', function(e) {
+            if (testSection.style.display === 'block' && timeLeft > 0) {
+                e.preventDefault();
+                e.returnValue = 'Your test progress will be lost if you leave. Are you sure?';
+            }
+        });
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeTest();
+            
+            // Add keyboard shortcut for submit (Ctrl/Cmd + Enter)
+            document.addEventListener('keydown', function(e) {
+                if ((e.ctrlKey || e.metaKey) && e.key === 'Enter' && testSection.style.display === 'block') {
+                    submitTest();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
