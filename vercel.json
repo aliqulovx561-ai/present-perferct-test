@@ -1,0 +1,17 @@
+{
+  "functions": {
+    "api/submit-test.js": {
+      "maxDuration": 10
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/",
+      "destination": "/public/index.html"
+    },
+    {
+      "source": "/api/submit-test",
+      "destination": "/api/submit-test.js"
+    }
+  ]
+}
