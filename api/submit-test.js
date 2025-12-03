@@ -135,4 +135,142 @@ function generateTeacherReport(data) {
     const unansweredQuestions = data.detailedResults.filter(q => q.userAnswer === 'Not answered');
     
     if (correctQuestions.length > 0) {
-        report
+        report += `✅ *CORRECT ANSWERS (${correctQuestions.length})*\n`;
+        correctQuestions.forEach((result, index) => {
+            report += `${result.questionNumber}. ${result.question}\n`;
+            report += `   ✅ Student chose: ${result.userAnswer}\n`;
+            report += `   💡 ${result.explanation}\n\n`;
+        });
+    }
+    
+    if (incorrectQuestions.length > 0) {
+        report += `❌ *INCORRECT ANSWERS (${incorrectQuestions.length})*\n`;
+        incorrectQuestions.forEach((result, index) => {
+            report += `${result.questionNumber}. ${result.question}\n`;
+            report += `   ❌ Student chose: ${result.userAnswer}\n`;
+            report += `   ✅ Correct answer: ${result.correctAnswer}\n`;
+            report += `   💡 ${result.explanation}\n\n`;
+        });
+    }
+    
+    if (unansweredQuestions.length > 0) {
+        report += `⚠️ *UNANSWERED QUESTIONS (${unansweredQuestions.length})*\n`;
+        unansweredQuestions.forEach((result, index) => {
+            report += `${result.questionNumber}. ${result.question}\n`;
+            report += `   ⚠️ Student did not answer\n`;
+            report += `   ✅ Correct answer: ${result.correctAnswer}\n`;
+            report += `   💡 ${result.explanation}\n\n`;
+        });
+    }
+    
+    report += `📋 *PERFORMANCE SUMMARY*\n`;
+    report += `├─ ✅ Correct: ${correctQuestions.length}\n`;
+    report += `├─ ❌ Incorrect: ${incorrectQuestions.length}\n`;
+    if (unansweredQuestions.length > 0) {
+        report += `├─ ⚠️ Unanswered: ${unansweredQuestions.length}\n`;
+    }
+    report += `├─ 📊 Accuracy: ${data.percentage}%\n`;
+    report += `└─ ⏱️ Speed: ${Math.round(data.timeSpent / data.total)} seconds per question\n\n`;
+    
+    // Weak areas analysis
+    const questionTypes = {
+        'yet': [1, 10],
+        'since': [2],
+        'ever': [3, 9],
+        'just': [4],
+        'multiple times': [5],
+        'present results': [6, 11, 15],
+        'how long': [7],
+        'for': [8],
+        'recently': [13],
+        'first time': [14],
+        'question form': [12]
+    };
+    
+    let weakAreas = [];
+    for (const [type, questions] of Object.entries(questionTypes)) {
+        const typeQuestions = data.detailedResults.filter(q => questions.includes(q.questionNumber));
+        const incorrectType = typeQuestions.filter(q => !q.isCorrect || q.userAnswer === 'Not answered');
+        if (incorrectType.length > 0) {
+            weakAreas.push(type);
+        }
+    }
+    
+    if (weakAreas.length > 0) {
+        report += `🎯 *AREAS NEEDING IMPROVEMENT*\n`;
+        report += `Student struggled with:\n`;
+        weakAreas.forEach(area => {
+            report += `• ${area}\n`;
+        });
+        report += `\n`;
+    }
+    
+    report += `📅 *Report generated:* ${data.timestamp}\n`;
+    report += `_Automatic test reporting system_`;
+    
+    return report;
+}
+
+async function sendToTelegram(chatId, message) {
+    const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
+    
+    if (!TELEGRAM_BOT_TOKEN) {
+        console.error('TELEGRAM_BOT_TOKEN is not set in environment variables');
+        return false;
+    }
+    
+    try {
+        // Telegram has a 4096 character limit per message
+        // Split long messages
+        const maxLength = 4000;
+        const messages = [];
+        
+        if (message.length > maxLength) {
+            let start = 0;
+            while (start < message.length) {
+                let end = start + maxLength;
+                if (end < message.length) {
+                    // Try to break at a newline
+                    const lastNewline = message.lastIndexOf('\n', end);
+                    if (lastNewline > start + maxLength * 0.8) {
+                        end = lastNewline;
+                    }
+                }
+                messages.push(message.substring(start, end));
+                start = end;
+            }
+        } else {
+            messages.push(message);
+        }
+        
+        // Send all parts
+        const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+        
+        for (let i = 0; i < messages.length; i++) {
+            const part = messages[i];
+            const partText = messages.length > 1 ? 
+                `*Part ${i + 1}/${messages.length}*\n\n${part}` : 
+                part;
+            
+            const response = await axios.post(url, {
+                chat_id: chatId,
+                text: partText,
+                parse_mode: 'Markdown',
+                disable_web_page_preview: true
+            });
+            
+            // Small delay between messages to avoid rate limiting
+            if (i < messages.length - 1) {
+                await new Promise(resolve => setTimeout(resolve, 500));
+            }
+        }
+        
+        return true;
+    } catch (error) {
+        console.error('Error sending Telegram message:', error.message);
+        if (error.response) {
+            console.error('Telegram API response:', error.response.data);
+        }
+        return false;
+    }
+}
